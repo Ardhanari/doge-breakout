@@ -50,6 +50,10 @@ class Player(pygame.sprite.Sprite):
         self.rect.bottom = pygame.display.get_surface().get_height()
         self.rect.x = int(pygame.display.get_surface().get_height()/2)
 
+    def move(self):
+        # position = self.rect.x
+        print(self.rect.x)
+
 class Block(pygame.sprite.Sprite):
     
     def __init__(self, x, y):
@@ -112,7 +116,7 @@ def row_of_blocks(block_row):
             allsprites.add(block)
 
             block_column = block_column + block.width + 2
-            print(block_column)
+            # print(block_column) # debug
 
     block_column = 0 # back to initial state
     # block_row += 30
@@ -123,16 +127,38 @@ for row in range(8):
     row_of_blocks(block_row)
     block_row += 30
 
-game_over = False
-game_won = False
-exit_game = False
-intro = True 
-
-
 def main_game():
+    # player = Player()
+    # player.move()
+    game_over = False
+    game_won = False
+    exit_game = False
+    intro = True 
 # Main loop 
-    while 1:
+    while not exit_game:
+        
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    player.rect.x -= 20
+                    player.move()
+                    print("left")
+                if event.key == pygame.K_RIGHT:
+                    player.rect.x += 20
+                    print("right")
+                if event.key == pygame.K_ESCAPE:
+                        exit_game = True
+                        print("closed with esc")
+                        exit()    
+            if event.type == pygame.QUIT:
+                exit_game = True
+                print("closed with X")
+                exit()
+                    # if event.type == pygame.KEYDOWN:
+                        
 
+
+        # Game finished (over, won or quit)
         if game_over:
             print("Game over!")
             print("Play again?")
@@ -142,16 +168,8 @@ def main_game():
             print("Play again?")
 
         # Quit game
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                exit_game = True
-                print("closed with X")
-                exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    exit_game = True
-                    print("closed with esc")
-                    exit()
+        # for event in pygame.event.get():
+            
 
         screen.blit(background, (0, 0))
         allsprites.draw(screen)
