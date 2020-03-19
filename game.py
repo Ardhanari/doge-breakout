@@ -1,5 +1,7 @@
 import pygame, sys
 
+screen_width = 800
+screen_height = 600 
 ball_width = 100 
 ball_height = 100 
 player_width = 300
@@ -8,9 +10,14 @@ player_height = 25
 
 class Ball(pygame.sprite.Sprite):
 
-    ball_speed = 2 #??
+    speed = 1 #??
     # position
-    # direction
+    direction = 300 # degrees 
+
+    # x = int((screen_width-ball_width/2)/2)
+    # y = int(screen_height-ball_height-player_height)
+    x = 200
+    y = 0 
 
     def __init__(self):
         doge = pygame.image.load('images/doge.png')
@@ -30,15 +37,31 @@ class Ball(pygame.sprite.Sprite):
     # bouncing function 
         # changes direction
         # bounces of and removes a block
-        # bounces of walls
         # bounces of Player
         # sound
+    def move(self):
+        # to figure out how angles work 
+        self.x += self.speed * self.direction
+        self.y += self.speed #+= what?
+
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+        # Bouncing off the top wall
+        if self.rect.y <= 0:
+            self.rect.y = 1
+        # Boucing off the right wall
+        if self.rect.x <= 0:
+            self.rect.x = 1
+        # Boucing off the left wall
+        if self.rect.x >= self.screenwidth:
+            self.rect.x = self.screenwidth - 1
+        if self.rect.y > screen_height:
+            # game over 
+            pass
 
 class Player(pygame.sprite.Sprite):
-    # needs speed (possibly changing speed?)
-    # position
-    # direction - left and right
-
+    
     def __init__(self):
 
         pygame.sprite.Sprite.__init__(self)
@@ -75,7 +98,7 @@ class Block(pygame.sprite.Sprite):
 pygame.init()
 
 # Create an 800x600 sized screen
-screen = pygame.display.set_mode([800, 600])
+screen = pygame.display.set_mode([screen_width, screen_height])
 
 # Set background color
 background = pygame.Surface(screen.get_size())
@@ -128,35 +151,40 @@ for row in range(8):
     block_row += 30
 
 def main_game():
-    # player = Player()
-    # player.move()
+    
     game_over = False
     game_won = False
     exit_game = False
     intro = True 
-# Main loop 
+    
+    # Main loop 
     while not exit_game:
-        
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    player.rect.x -= 20
-                    player.move()
-                    print("left")
-                if event.key == pygame.K_RIGHT:
-                    player.rect.x += 20
-                    print("right")
-                if event.key == pygame.K_ESCAPE:
-                        exit_game = True
-                        print("closed with esc")
-                        exit()    
-            if event.type == pygame.QUIT:
-                exit_game = True
-                print("closed with X")
-                exit()
-                    # if event.type == pygame.KEYDOWN:
-                        
 
+        # screen.fill((0,0,0))
+
+        if not game_over or not game_won: 
+
+            player.move()
+            ball.move()        
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_LEFT:
+                        player.rect.x -= 20
+                        player.move()
+                        print("left")
+                    if event.key == pygame.K_RIGHT:
+                        player.rect.x += 20
+                        print("right")
+                    # Quit game (Escape)
+                    if event.key == pygame.K_ESCAPE:
+                            exit_game = True
+                            print("closed with esc")
+                            exit()    
+                # Quit game (x)
+                if event.type == pygame.QUIT:
+                    exit_game = True
+                    print("closed with X")
+                    exit()
 
         # Game finished (over, won or quit)
         if game_over:
@@ -166,10 +194,6 @@ def main_game():
         if game_won:
             print("Game won!")
             print("Play again?")
-
-        # Quit game
-        # for event in pygame.event.get():
-            
 
         screen.blit(background, (0, 0))
         allsprites.draw(screen)
