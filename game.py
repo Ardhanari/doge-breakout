@@ -102,17 +102,26 @@ allsprites.add(player)
 ball = Ball()
 allsprites.add(ball)
 
-# POsition to start rendering blocks
-block_column = 0 # 26, 52, 78 etc.
-block_row = 0 # block_height + 2
 # Block(self, x, y)
-for column in range(8):
-        block = Block(block_column, block_row)
-        blocks.add(block)
-        allsprites.add(block)
+def row_of_blocks(block_row):
+    # POsition to start rendering blocks
+    block_column = 0 # 26, 52, 78 etc.
+    for i in range(7):
+            block = Block(block_column, block_row)
+            blocks.add(block)
+            allsprites.add(block)
 
-        block_column = block_column + block.width + 2
-        print(block_column)
+            block_column = block_column + block.width + 2
+            print(block_column)
+
+    block_column = 0 # back to initial state
+    # block_row += 30
+
+block_row = 0 # block_height + 2
+# create blocks
+for row in range(8):
+    row_of_blocks(block_row)
+    block_row += 30
 
 game_over = False
 game_won = False
