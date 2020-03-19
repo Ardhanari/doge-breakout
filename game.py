@@ -39,6 +39,20 @@ class Player(pygame.sprite.Sprite):
 
 class Block(pygame.sprite.Sprite):
     # needs width / height 
+    
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+
+        block_width = int(pygame.display.get_surface().get_height()/5)
+        block_height = 15
+
+        self.image = pygame.Surface([block_width, block_height])
+        self.image.fill((0,0,0))
+        self.rect = self.image.get_rect()
+
+        self.rect.x = 0
+        self.rect.y = 0
+
     # colour
     # position
     pass
@@ -76,6 +90,10 @@ allsprites = pygame.sprite.Group()
 
 # player = Player()
 # allsprites.add(player)
+
+block = Block()
+blocks.add(block)
+allsprites.add(block)
 
 ball = Ball()
 allsprites.add(ball)
