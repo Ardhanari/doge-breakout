@@ -1,5 +1,11 @@
 import pygame, sys
 
+ball_width = 100 
+ball_height = 100 
+player_width = 300
+player_height = 25
+
+
 class Ball(pygame.sprite.Sprite):
 
     ball_speed = 2 #??
@@ -10,8 +16,8 @@ class Ball(pygame.sprite.Sprite):
         doge = pygame.image.load('images/doge.png')
 
         pygame.sprite.Sprite.__init__(self)
-        self.width = 100
-        self.height = 100
+        self.width = ball_width
+        self.height = ball_height
         self.image = doge
         self.image.set_colorkey((255,255,255))
         self.rect = self.image.get_rect()
@@ -19,7 +25,7 @@ class Ball(pygame.sprite.Sprite):
         self.screenheight = pygame.display.get_surface().get_height()
         self.screenwidth = pygame.display.get_surface().get_width()
         self.rect.x = int((self.screenwidth-self.width/2)/2)
-        self.rect.y = int(self.screenheight-self.height)
+        self.rect.y = int(self.screenheight-self.height-player_height)
 
     # bouncing function 
         # changes direction
@@ -31,20 +37,26 @@ class Ball(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     # needs speed (possibly changing speed?)
     # position
-    # direction - left and right managed below
+    # direction - left and right
 
-    # width / height 
-    # background
-    pass
+    def __init__(self):
+
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.Surface([player_width, player_height])
+        self.image.fill((117, 255, 7))
+        self.rect = self.image.get_rect()
+
+        self.rect.bottom = pygame.display.get_surface().get_height()
+        self.rect.x = int(pygame.display.get_surface().get_height()/2)
 
 class Block(pygame.sprite.Sprite):
-    # needs width / height 
     
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
 
         block_width = int(pygame.display.get_surface().get_height()/5)
-        block_height = 15
+        block_height = 25
 
         self.image = pygame.Surface([block_width, block_height])
         self.image.fill((0,0,0))
@@ -53,9 +65,6 @@ class Block(pygame.sprite.Sprite):
         self.rect.x = 0
         self.rect.y = 0
 
-    # colour
-    # position
-    pass
 # how many blocks?
 
 # Initialize pygame
@@ -78,7 +87,6 @@ text = font.render("Much game, wow", 1, (10, 10, 10))
 textpos = text.get_rect()
 textpos.centerx = background.get_rect().centerx
 background.blit(text, textpos)
-# pygame.display.set_mode((display_width,display_height))
 
 screen.blit(background, (0, 0))
 pygame.display.flip()
@@ -88,8 +96,8 @@ blocks = pygame.sprite.Group()
 balls = pygame.sprite.Group()
 allsprites = pygame.sprite.Group()
 
-# player = Player()
-# allsprites.add(player)
+player = Player()
+allsprites.add(player)
 
 block = Block()
 blocks.add(block)
