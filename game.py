@@ -1,12 +1,25 @@
 import pygame, sys
 
 class Ball(pygame.sprite.Sprite):
-    # needs speed
+
+    ball_speed = 2 #??
     # position
     # direction
 
-    # background
-    # shape / size
+    def __init__(self):
+        doge = pygame.image.load('images/doge.png')
+
+        pygame.sprite.Sprite.__init__(self)
+        self.width = 100
+        self.height = 100
+        self.image = doge
+        self.image.set_colorkey((255,255,255))
+        self.rect = self.image.get_rect()
+        # Screen height/width and initial position of the ball
+        self.screenheight = pygame.display.get_surface().get_height()
+        self.screenwidth = pygame.display.get_surface().get_width()
+        self.rect.x = int((self.screenwidth-self.width/2)/2)
+        self.rect.y = int(self.screenheight-self.height)
 
     # bouncing function 
         # changes direction
@@ -14,7 +27,6 @@ class Ball(pygame.sprite.Sprite):
         # bounces of walls
         # bounces of Player
         # sound
-    pass
 
 class Player(pygame.sprite.Sprite):
     # needs speed (possibly changing speed?)
@@ -52,9 +64,21 @@ text = font.render("Much game, wow", 1, (10, 10, 10))
 textpos = text.get_rect()
 textpos.centerx = background.get_rect().centerx
 background.blit(text, textpos)
+# pygame.display.set_mode((display_width,display_height))
 
 screen.blit(background, (0, 0))
 pygame.display.flip()
+
+# Create sprite lists
+blocks = pygame.sprite.Group()
+balls = pygame.sprite.Group()
+allsprites = pygame.sprite.Group()
+
+# player = Player()
+# allsprites.add(player)
+
+ball = Ball()
+allsprites.add(ball)
 
 game_over = False
 game_won = False
@@ -65,6 +89,7 @@ intro = True
 def main_game():
 # Main loop 
     while 1:
+
         if game_over:
             print("Game over!")
             print("Play again?")
@@ -76,16 +101,17 @@ def main_game():
         # Quit game
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                exit_program = True
+                exit_game = True
                 print("closed with X")
                 exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    exit_program = True
+                    exit_game = True
                     print("closed with esc")
                     exit()
 
         screen.blit(background, (0, 0))
+        allsprites.draw(screen)
         pygame.display.flip()
 
 # if __name__ == '__main__': 
