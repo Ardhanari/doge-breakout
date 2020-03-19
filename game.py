@@ -52,18 +52,18 @@ class Player(pygame.sprite.Sprite):
 
 class Block(pygame.sprite.Sprite):
     
-    def __init__(self):
+    def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
 
-        block_width = int(pygame.display.get_surface().get_height()/5)
-        block_height = 25
+        self.width = int(pygame.display.get_surface().get_height()/5)
+        self.height = 25
 
-        self.image = pygame.Surface([block_width, block_height])
+        self.image = pygame.Surface([self.width, self.height])
         self.image.fill((0,0,0))
         self.rect = self.image.get_rect()
 
-        self.rect.x = 0
-        self.rect.y = 0
+        self.rect.x = x
+        self.rect.y = y
 
 # how many blocks?
 
@@ -99,12 +99,20 @@ allsprites = pygame.sprite.Group()
 player = Player()
 allsprites.add(player)
 
-block = Block()
-blocks.add(block)
-allsprites.add(block)
-
 ball = Ball()
 allsprites.add(ball)
+
+# POsition to start rendering blocks
+block_column = 0 # 26, 52, 78 etc.
+block_row = 0 # block_height + 2
+# Block(self, x, y)
+for column in range(8):
+        block = Block(block_column, block_row)
+        blocks.add(block)
+        allsprites.add(block)
+
+        block_column = block_column + block.width + 2
+        print(block_column)
 
 game_over = False
 game_won = False
