@@ -10,14 +10,14 @@ player_height = 25
 
 class Ball(pygame.sprite.Sprite):
 
-    speed = 1 #??
+    speed = 3 #??
     # position
-    direction = 300 # degrees 
+    # direction = 300 # degrees 
 
     # x = int((screen_width-ball_width/2)/2)
     # y = int(screen_height-ball_height-player_height)
     x = 200
-    y = 0 
+    y = 600 - ball_height
 
     def __init__(self):
         doge = pygame.image.load('images/doge.png')
@@ -41,24 +41,27 @@ class Ball(pygame.sprite.Sprite):
         # sound
     def move(self):
         # to figure out how angles work 
-        self.x += self.speed * self.direction
-        self.y += self.speed #+= what?
+        print(self.speed)
+        # self.x -= self.speed * self.direction
+        # self.y -= self.speed #+= what?
 
-        self.rect.x = self.x
-        self.rect.y = self.y
+        # self.rect.x = self.x
+        # self.rect.y = self.y
+
+        self.rect.x += self.speed #* self.direction
+        self.rect.y -= self.speed #+= what?
 
         # Bouncing off the top wall
         if self.rect.y <= 0:
             self.rect.y = 1
-        # Boucing off the right wall
+        # Boucing off the left wall
         if self.rect.x <= 0:
             self.rect.x = 1
         # Boucing off the left wall
-        if self.rect.x >= self.screenwidth:
-            self.rect.x = self.screenwidth - 1
+        if self.rect.x >= self.screenwidth - ball_width:
+            self.rect.x = self.screenwidth - ball_width - 1
         if self.rect.y > screen_height:
-            # game over 
-            pass
+            return True # will return true to game_over variable
 
 class Player(pygame.sprite.Sprite):
     
@@ -73,9 +76,10 @@ class Player(pygame.sprite.Sprite):
         self.rect.bottom = pygame.display.get_surface().get_height()
         self.rect.x = int(pygame.display.get_surface().get_height()/2)
 
-    def move(self):
-        # position = self.rect.x
-        print(self.rect.x)
+    # def move(self):
+    #     # position = self.rect.x
+    #     # print(self.rect.x)
+    #     pass
 
 class Block(pygame.sprite.Sprite):
     
@@ -115,8 +119,10 @@ textpos = text.get_rect()
 textpos.centerx = background.get_rect().centerx
 background.blit(text, textpos)
 
-screen.blit(background, (0, 0))
-pygame.display.flip()
+# screen.blit(background, (0, 0))
+# pygame.display.flip()
+
+clock = pygame.time.Clock()
 
 # Create sprite lists
 blocks = pygame.sprite.Group()
@@ -164,13 +170,13 @@ def main_game():
 
         if not game_over or not game_won: 
 
-            player.move()
+            # player.move()
             ball.move()        
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         player.rect.x -= 20
-                        player.move()
+                        # player.move()
                         print("left")
                     if event.key == pygame.K_RIGHT:
                         player.rect.x += 20
@@ -197,6 +203,7 @@ def main_game():
 
         screen.blit(background, (0, 0))
         allsprites.draw(screen)
+        clock.tick(30)
         pygame.display.flip()
 
 # if __name__ == '__main__': 
