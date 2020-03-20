@@ -69,7 +69,7 @@ class Player(pygame.sprite.Sprite):
 
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = pygame.Surface([player_width, player_height])
+        self.image = pygame.Surface((player_width, player_height))
         self.image.fill((117, 255, 7))
         self.rect = self.image.get_rect()
 
@@ -205,6 +205,15 @@ def main_game():
         allsprites.draw(screen)
         clock.tick(30)
         pygame.display.flip()
+
+        if intro: 
+                pygame.mixer.music.load('sounds/intro.mp3')
+                pygame.mixer.music.play()
+                pygame.mixer.music.fadeout(6000)
+                pygame.mixer.music.load('sounds/pop.mp3')
+                # to be moved to bounce function
+                # pygame.mixer.music.play()
+                intro = False
 
 # if __name__ == '__main__': 
 #     main()
