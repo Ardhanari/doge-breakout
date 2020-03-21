@@ -64,10 +64,6 @@ class Ball(pygame.sprite.Sprite):
             pygame.mixer.music.play()
             self.dir = (360 - self.dir) % 360
             self.rect.x = self.screenwidth - BALL_WIDTH - 1
-        # Bounce off player
-        # if pygame.sprite.spritecollide(ball, player, False):
-        #     pygame.mixer.music.play()
-            # do what now? 
         # Ball touches bottom wall
         if self.rect.y > SCREEN_HEIGHT:
             # pygame.mixer.music.play() play another sound?
@@ -96,7 +92,8 @@ class Block(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
 
-        self.width = int(pygame.display.get_surface().get_height()/5)
+        # self.width = int(pygame.display.get_surface().get_height()/5)
+        self.width = 77.8
         self.height = 25
 
         self.image = pygame.Surface([self.width, self.height])
@@ -105,8 +102,6 @@ class Block(pygame.sprite.Sprite):
 
         self.rect.x = x
         self.rect.y = y
-
-# how many blocks?
 
 # Initialize pygame
 pygame.init()
@@ -136,6 +131,7 @@ player = Player()
 allsprites.add(player)
 
 ball = Ball()
+balls.add(ball)
 allsprites.add(ball)
 
 # Block(self, x, y)
@@ -193,16 +189,23 @@ def main_game():
 
         if not game_over or not game_won: 
 
-            # player.move()
             ball.move()     
+
+            # Bounce off player
+            if pygame.sprite.spritecollide(player, balls, False):
+                pygame.mixer.music.play()
+                diff = (player.rect.x + PLAYER_WIDTH) - (ball.rect.x + ball.width - 1/2)
+                print(diff)
+                ball.horizontal_bounce(diff)
 
             # check for ball colliding with walls 
             # if pygame.sprite.collide_rect(ball, blocks):
             bounced_blocks = pygame.sprite.spritecollide(ball, blocks, True)
             if len(bounced_blocks) > 0: 
                 pygame.mixer.music.play()
-            print(bounced_blocks)
-            print(len(blocks))
+                ball.horizontal_bounce(0)
+                print(bounced_blocks)
+                print(len(blocks))
 
             if len(blocks) == 0:
                 game_won = True
