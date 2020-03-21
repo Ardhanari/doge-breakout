@@ -11,7 +11,7 @@ PLAYER_HEIGHT = 25
 
 class Ball(pygame.sprite.Sprite):
 
-    speed = 3 #??
+    speed = 10 #??
     # position
     dir = 300 # degrees 
 
@@ -82,17 +82,12 @@ class Player(pygame.sprite.Sprite):
         self.rect.bottom = pygame.display.get_surface().get_height()
         self.rect.x = int(pygame.display.get_surface().get_height()/2)
 
-    # def move(self):
-    #     # position = self.rect.x
-    #     # print(self.rect.x)
-    #     pass
 
 class Block(pygame.sprite.Sprite):
     
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
 
-        # self.width = int(pygame.display.get_surface().get_height()/5)
         self.width = 77.8
         self.height = 25
 
@@ -144,10 +139,8 @@ def row_of_blocks(block_row):
             allsprites.add(block)
 
             block_column = block_column + block.width + 2
-            # print(block_column) # debug
 
     block_column = 0 # back to initial state
-    # block_row += 30
 
 block_row = 0 # block_height + 2
 # create blocks
@@ -183,9 +176,7 @@ def main_game():
         #     # to be moved to bounce function
         #     # pygame.mixer.music.play()
             
-            
             intro = False
-        # screen.fill((0,0,0))
 
         if not game_over or not game_won: 
 
@@ -199,7 +190,6 @@ def main_game():
                 ball.horizontal_bounce(diff)
 
             # check for ball colliding with walls 
-            # if pygame.sprite.collide_rect(ball, blocks):
             bounced_blocks = pygame.sprite.spritecollide(ball, blocks, True)
             if len(bounced_blocks) > 0: 
                 pygame.mixer.music.play()
@@ -212,12 +202,10 @@ def main_game():
                 print("Game won!")
                 print("Play again?")
 
-
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         player.rect.x -= 20
-                        # player.move()
                         print("left")
                     if event.key == pygame.K_RIGHT:
                         player.rect.x += 20
@@ -243,9 +231,4 @@ def main_game():
         clock.tick(30)
         pygame.display.flip()
 
-
-# if __name__ == '__main__': 
-#     main()
-
-# intro()
 main_game()
