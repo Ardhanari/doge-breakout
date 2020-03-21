@@ -60,10 +60,10 @@ class Ball(pygame.sprite.Sprite):
             self.dir = (360 - self.dir) % 360
             self.rect.x = self.screenwidth - BALL_WIDTH - 1
         # Ball touches bottom wall
-        if self.rect.y > SCREEN_HEIGHT:
-            game_over = True
+        if self.rect.y >= SCREEN_HEIGHT-BALL_HEIGHT:
+            return True
         else:
-            game_over = False
+            return False
 
 
 class Player(pygame.sprite.Sprite):
@@ -159,12 +159,12 @@ for row in range(3):
 def main_game():
     
     game_over = False
-    game_won = True
+    game_won = False
     intro = True 
     sound = True
     
     # Main loop 
-    while not game_won and not game_over:
+    while not game_won:
 
         if intro: 
         #     text = font.render("Much game, wow", 1, (10, 10, 10))
@@ -182,9 +182,9 @@ def main_game():
             
             intro = False
 
-        if not game_over and not game_won: 
+        if not game_won: 
 
-            ball.move()
+            game_over = ball.move()
 
             # Bounce off player
             if pygame.sprite.spritecollide(player, balls, False):
@@ -199,8 +199,8 @@ def main_game():
                 pygame.mixer.music.play()
                 ball.horizontal_bounce(0)
 
-            # if len(blocks) == 0:
-            #     game_won = True
+            if len(blocks) == 0:
+                game_won = True
             #     background = pygame.Surface(screen.get_size())
             #     background = background.convert()
             #     background.fill((55, 55, 148))
@@ -216,11 +216,15 @@ def main_game():
             #     print("Play again?")
 
             if game_over:
-                pygame.mixer.music.load('sounds/game_over.wav')
-                pygame.mixer.music.play()
-                pygame.mixer.music.stop()
-                print("Game over!")
-                print("Play again?") 
+                if sound: 
+                    pygame.mixer.music.load('sounds/game_over.wav')
+                    pygame.mixer.music.play()
+                    sound = False
+                ball.speed = 0
+                text = font.render("Gaem over", 1, (10, 10, 10))
+                text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+                screen.blit(text, text_rect)
+                pygame.display.update()
 
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
