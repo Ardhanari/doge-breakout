@@ -14,7 +14,6 @@ class Ball(pygame.sprite.Sprite):
     speed = 3 #??
     # position
     dir = 300 # degrees 
-    dir_radians = math.radians(dir)
 
     # x = int((SCREEN_WIDTH-BALL_WIDTH/2)/2)
     # y = int(SCREEN_HEIGHT-BALL_HEIGHT-PLAYER_HEIGHT)
@@ -38,23 +37,26 @@ class Ball(pygame.sprite.Sprite):
         
 
     def horizontal_bounce(self, diff):
-        self.dir = (360 - self.dir) % 360
+        self.dir = (180 - self.dir) % 360
         self.dir -= diff
     
     def move(self):
-        print(self.speed)
+        print(self.rect.x)
+        dir_radians = math.radians(self.dir)
 
-        self.rect.x += self.speed * math.cos(self.dir_radians)
-        self.rect.y -= self.speed * math.sin(self.dir_radians)
+        self.rect.x += self.speed * math.sin(dir_radians)
+        self.rect.y -= self.speed * math.cos(dir_radians)
 
         # Bouncing off the top wall
         if self.rect.y <= 0:
             pygame.mixer.music.play()
             self.horizontal_bounce(0)
+            print("bounced off top)")
             self.rect.y = 1
         # Boucing off the left wall
         if self.rect.x <= 0:
             pygame.mixer.music.play()
+            print("bounced off left")
             self.dir = (360 - self.dir) % 360
             self.rect.x = 1
         # Boucing off the right wall
@@ -140,7 +142,7 @@ allsprites.add(ball)
 def row_of_blocks(block_row):
     # POsition to start rendering blocks
     block_column = 0 # 26, 52, 78 etc.
-    for i in range(7):
+    for i in range(10):
             block = Block(block_column, block_row)
             blocks.add(block)
             allsprites.add(block)
@@ -168,22 +170,22 @@ def main_game():
     while not exit_game:
 
         if intro: 
-            text = font.render("Much game, wow", 1, (10, 10, 10))
-            textpos = text.get_rect()
-            textpos.centerx = background.get_rect().centerx
-            background.blit(text, textpos)
-            # text = font.render("You win!", True, BLACK)
-            # text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-            # screen.blit(text, text_rect)
+        #     text = font.render("Much game, wow", 1, (10, 10, 10))
+        #     textpos = text.get_rect()
+        #     textpos.centerx = background.get_rect().centerx
+        #     background.blit(text, textpos)
+        #     # text = font.render("You win!", True, BLACK)
+        #     # text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+        #     # screen.blit(text, text_rect)
 
-            screen.blit(background, (0, 0))
-            pygame.display.flip()
-            pygame.mixer.music.load('sounds/intro.mp3')
-            pygame.mixer.music.play()
-            pygame.mixer.music.fadeout(6000)
+        #     screen.blit(background, (0, 0))
+        #     pygame.display.flip()
+        #     pygame.mixer.music.load('sounds/intro.mp3')
+        #     pygame.mixer.music.play()
+        #     pygame.mixer.music.fadeout(6000)
             pygame.mixer.music.load('sounds/pop.mp3')
-            # to be moved to bounce function
-            # pygame.mixer.music.play()
+        #     # to be moved to bounce function
+        #     # pygame.mixer.music.play()
             
             
             intro = False
