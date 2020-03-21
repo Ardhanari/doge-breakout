@@ -11,12 +11,8 @@ PLAYER_HEIGHT = 25
 
 class Ball(pygame.sprite.Sprite):
 
-    speed = 10 #??
-    # position
+    speed = 7
     dir = 300 # degrees 
-
-    # x = int((SCREEN_WIDTH-BALL_WIDTH/2)/2)
-    # y = int(SCREEN_HEIGHT-BALL_HEIGHT-PLAYER_HEIGHT)
     x = 200
     y = 600 - BALL_HEIGHT
 
@@ -35,7 +31,6 @@ class Ball(pygame.sprite.Sprite):
         self.rect.x = int((self.screenwidth-self.width/2)/2)
         self.rect.y = int(self.screenheight-self.height-PLAYER_HEIGHT)
         
-
     def horizontal_bounce(self, diff):
         self.dir = (180 - self.dir) % 360
         self.dir -= diff
@@ -66,13 +61,14 @@ class Ball(pygame.sprite.Sprite):
             self.rect.x = self.screenwidth - BALL_WIDTH - 1
         # Ball touches bottom wall
         if self.rect.y > SCREEN_HEIGHT:
-            # pygame.mixer.music.play() play another sound?
-            return True # will return true to game_over variable
+            game_over = True
+        else:
+            game_over = False
+
 
 class Player(pygame.sprite.Sprite):
     
     def __init__(self):
-
         pygame.sprite.Sprite.__init__(self)
 
         self.image = pygame.Surface([PLAYER_WIDTH, PLAYER_HEIGHT])
@@ -81,6 +77,18 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.bottom = pygame.display.get_surface().get_height()
         self.rect.x = int(pygame.display.get_surface().get_height()/2)
+        # player cant move out of the screen
+        # # Boucing off the left wall
+        # if self.rect.x <= 0:
+        #     pygame.mixer.music.play()
+        #     print("bounced off left")
+        #     self.dir = (360 - self.dir) % 360
+        #     self.rect.x = 1
+        # # Boucing off the right wall
+        # if self.rect.x >= self.screenwidth - BALL_WIDTH:
+        #     pygame.mixer.music.play()
+        #     self.dir = (360 - self.dir) % 360
+        #     self.rect.x = self.screenwidth - BALL_WIDTH - 1
 
 
 class Block(pygame.sprite.Sprite):
@@ -144,7 +152,7 @@ def row_of_blocks(block_row):
 
 block_row = 0 # block_height + 2
 # create blocks
-for row in range(8):
+for row in range(3):
     row_of_blocks(block_row)
     block_row += 30
 
@@ -163,10 +171,6 @@ def main_game():
         #     textpos = text.get_rect()
         #     textpos.centerx = background.get_rect().centerx
         #     background.blit(text, textpos)
-        #     # text = font.render("You win!", True, BLACK)
-        #     # text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-        #     # screen.blit(text, text_rect)
-
         #     screen.blit(background, (0, 0))
         #     pygame.display.flip()
         #     pygame.mixer.music.load('sounds/intro.mp3')
@@ -180,12 +184,12 @@ def main_game():
 
         if not game_over or not game_won: 
 
-            ball.move()     
+            ball.move()
 
             # Bounce off player
             if pygame.sprite.spritecollide(player, balls, False):
                 pygame.mixer.music.play()
-                diff = (player.rect.x + PLAYER_WIDTH) - (ball.rect.x + ball.width - 1/2)
+                diff = (player.rect.x + PLAYER_WIDTH/2) - (ball.rect.x + ball.width - 1/2) # glitches, check math
                 print(diff)
                 ball.horizontal_bounce(diff)
 
@@ -194,13 +198,26 @@ def main_game():
             if len(bounced_blocks) > 0: 
                 pygame.mixer.music.play()
                 ball.horizontal_bounce(0)
-                print(bounced_blocks)
-                print(len(blocks))
 
             if len(blocks) == 0:
                 game_won = True
+                pygame.mixer.music.load('sounds/game_won.wav') # needs to play ONCE
+                pygame.mixer.music.play()
+                pygame.mixer.music.stop()
+                text = font.render("You won, wow", 1, (10, 10, 10))
+                text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+                screen.blit(text, text_rect)
+                screen.blit(background, (0, 0))
+                pygame.display.flip()
                 print("Game won!")
                 print("Play again?")
+
+            if game_over:
+                pygame.mixer.music.load('sounds/game_over.wav')
+                pygame.mixer.music.play()
+                pygame.mixer.music.stop()
+                print("Game over!")
+                print("Play again?") 
 
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
@@ -221,14 +238,9 @@ def main_game():
                     print("closed with X")
                     exit()
 
-        # Game finished (over, won or quit)
-        if game_over:
-            print("Game over!")
-            print("Play again?")
-
         screen.blit(background, (0, 0))
         allsprites.draw(screen)
-        clock.tick(30)
+        clock.tick(30) # 30 fps
         pygame.display.flip()
 
 main_game()
