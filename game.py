@@ -38,8 +38,8 @@ class Ball(pygame.sprite.Sprite):
     def move(self):
         dir_radians = math.radians(self.dir)
 
-        self.rect.x += self.speed * math.sin(dir_radians)
-        self.rect.y -= self.speed * math.cos(dir_radians)
+        self.rect.x += int(self.speed * math.sin(dir_radians))
+        self.rect.y -= int(self.speed * math.cos(dir_radians))
 
         # Bouncing off the top wall
         if self.rect.y <= 0:
@@ -86,8 +86,8 @@ class Block(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
 
-        self.width = 77.8
-        self.height = 25
+        self.width = int(77.8)
+        self.height = int(25)
 
         self.image = pygame.Surface([self.width, self.height])
         self.image.fill((0,0,0))
@@ -161,7 +161,7 @@ def main_game():
             textpos = text.get_rect()
             textpos.centerx = background.get_rect().centerx
             info = pygame.image.load('images/info.png')
-            infopos = info.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+            infopos = info.get_rect(center=(int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)))
             background.blit(text, textpos)
             background.blit(info, infopos)
             screen.blit(background, (0, 0))
@@ -221,7 +221,7 @@ def main_game():
                     sound = False
                 ball.speed = 0
                 text = font.render("Gaem over", 1, (10, 10, 10))
-                text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+                text_rect = text.get_rect(center=(int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)))
                 screen.blit(text, text_rect)
                 pygame.display.update()
 
@@ -259,7 +259,7 @@ def main_game():
         background_won.fill((55, 55, 148))
         
         text = font.render("You won, wow", 1, (10, 10, 10))
-        text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+        text_rect = text.get_rect(center=(int(SCREEN_WIDTH/2), int(SCREEN_HEIGHT/2)))
         
         screen.blit(background_won, (0, 0))
         screen.blit(text, text_rect)
