@@ -160,7 +160,6 @@ def main_game():
     
     game_over = False
     game_won = True
-    exit_game = False
     intro = True 
     sound = True
     
@@ -233,12 +232,10 @@ def main_game():
                         print("right")
                     # Quit game (Escape)
                     if event.key == pygame.K_ESCAPE:
-                            exit_game = True
                             print("closed with esc")
                             exit()    
                 # Quit game (x)
                 if event.type == pygame.QUIT:
-                    exit_game = True
                     print("closed with X")
                     exit()
 
@@ -249,8 +246,10 @@ def main_game():
 
     while game_won:
 
-        pygame.mixer.music.load('sounds/intro.mp3') # needs to play ONCE
-        pygame.mixer.music.play(-1) # actually, let's make it a loop 
+        if sound:
+            pygame.mixer.music.load('sounds/intro.mp3') # needs to play ONCE
+            pygame.mixer.music.play(-1) # actually, let's make it a loop 
+            sound = False
         
         background_won = pygame.Surface(screen.get_size())
         background_won = background_won.convert()
@@ -262,5 +261,16 @@ def main_game():
         screen.blit(background_won, (0, 0))
         screen.blit(text, text_rect)
         pygame.display.flip()
+
+        for event in pygame.event.get():
+            # Quit game (Escape)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                        print("closed with esc")
+                        exit()    
+            # Quit game (x)
+            if event.type == pygame.QUIT:
+                print("closed with X")
+                exit()
 
 main_game()
