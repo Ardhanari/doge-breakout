@@ -1,31 +1,32 @@
 import pygame, sys
 import math
 
-screen_width = 800
-screen_height = 600 
-ball_width = 100 
-ball_height = 100 
-player_width = 300
-player_height = 25
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600 
+BALL_WIDTH = 100 
+BALL_HEIGHT = 100 
+PLAYER_WIDTH = 300
+PLAYER_HEIGHT = 25
 
 
 class Ball(pygame.sprite.Sprite):
 
     speed = 3 #??
     # position
-    # direction = 300 # degrees 
+    dir = 300 # degrees 
+    dir_radians = math.radians(dir)
 
-    # x = int((screen_width-ball_width/2)/2)
-    # y = int(screen_height-ball_height-player_height)
+    # x = int((SCREEN_WIDTH-BALL_WIDTH/2)/2)
+    # y = int(SCREEN_HEIGHT-BALL_HEIGHT-PLAYER_HEIGHT)
     x = 200
-    y = 600 - ball_height
+    y = 600 - BALL_HEIGHT
 
     def __init__(self):
         doge = pygame.image.load('images/doge.png')
 
         pygame.sprite.Sprite.__init__(self)
-        self.width = ball_width
-        self.height = ball_height
+        self.width = BALL_WIDTH
+        self.height = BALL_HEIGHT
         self.image = doge
         self.image.set_colorkey((255,255,255))
         self.rect = self.image.get_rect()
@@ -33,43 +34,40 @@ class Ball(pygame.sprite.Sprite):
         self.screenheight = pygame.display.get_surface().get_height()
         self.screenwidth = pygame.display.get_surface().get_width()
         self.rect.x = int((self.screenwidth-self.width/2)/2)
-        self.rect.y = int(self.screenheight-self.height-player_height)
+        self.rect.y = int(self.screenheight-self.height-PLAYER_HEIGHT)
+        
 
-    # bouncing function 
-        # changes direction
-        # bounces of and removes a block
-        # bounces of Player
-        # sound
+    def horizontal_bounce(self, diff):
+        self.dir = (360 - self.dir) % 360
+        self.dir -= diff
+    
     def move(self):
-        # to figure out how angles work 
         print(self.speed)
-        # self.x -= self.speed * self.direction
-        # self.y -= self.speed #+= what?
 
-        # self.rect.x = self.x
-        # self.rect.y = self.y
-
-        self.rect.x += self.speed #* self.direction
-        self.rect.y -= self.speed #+= what?
+        self.rect.x += self.speed * math.cos(self.dir_radians)
+        self.rect.y -= self.speed * math.sin(self.dir_radians)
 
         # Bouncing off the top wall
         if self.rect.y <= 0:
             pygame.mixer.music.play()
+            self.horizontal_bounce(0)
             self.rect.y = 1
         # Boucing off the left wall
         if self.rect.x <= 0:
             pygame.mixer.music.play()
+            self.dir = (360 - self.dir) % 360
             self.rect.x = 1
-        # Boucing off the left wall
-        if self.rect.x >= self.screenwidth - ball_width:
+        # Boucing off the right wall
+        if self.rect.x >= self.screenwidth - BALL_WIDTH:
             pygame.mixer.music.play()
-            self.rect.x = self.screenwidth - ball_width - 1
+            self.dir = (360 - self.dir) % 360
+            self.rect.x = self.screenwidth - BALL_WIDTH - 1
         # Bounce off player
         # if pygame.sprite.spritecollide(ball, player, False):
         #     pygame.mixer.music.play()
             # do what now? 
         # Ball touches bottom wall
-        if self.rect.y > screen_height:
+        if self.rect.y > SCREEN_HEIGHT:
             # pygame.mixer.music.play() play another sound?
             return True # will return true to game_over variable
 
@@ -79,7 +77,7 @@ class Player(pygame.sprite.Sprite):
 
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = pygame.Surface([player_width, player_height])
+        self.image = pygame.Surface([PLAYER_WIDTH, PLAYER_HEIGHT])
         self.image.fill((117, 255, 7))
         self.rect = self.image.get_rect()
 
@@ -112,7 +110,7 @@ class Block(pygame.sprite.Sprite):
 pygame.init()
 
 # Create an 800x600 sized screen
-screen = pygame.display.set_mode([screen_width, screen_height])
+screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
 # Set background color
 background = pygame.Surface(screen.get_size())
