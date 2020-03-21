@@ -45,12 +45,10 @@ class Ball(pygame.sprite.Sprite):
         if self.rect.y <= 0:
             pygame.mixer.music.play()
             self.horizontal_bounce(0)
-            print("bounced off top)")
             self.rect.y = 1
         # Boucing off the left wall
         if self.rect.x <= 0:
             pygame.mixer.music.play()
-            print("bounced off left")
             self.dir = (360 - self.dir) % 360
             self.rect.x = 1
         # Boucing off the right wall
@@ -179,20 +177,13 @@ def main_game():
             intro = False
 
         if not game_won: 
-
             game_over = ball.move()
 
             # Bounce off player
-            # if pygame.sprite.spritecollide(player, balls, False):
             if pygame.sprite.collide_rect(player, ball):
                 pygame.mixer.music.play()
-                diff = (player.rect.x + PLAYER_WIDTH/2) - (ball.rect.x + BALL_WIDTH/2) # glitches, check math
-                
-                # ball.horizontal_bounce(diff)
                 ball.rect.y = SCREEN_HEIGHT - PLAYER_HEIGHT - BALL_HEIGHT - 1
-                print(ball.rect.y)
-                print(diff)
-                ball.horizontal_bounce(diff)
+                ball.horizontal_bounce(0)
 
             # check for ball colliding with walls 
             bounced_blocks = pygame.sprite.spritecollide(ball, blocks, True)
