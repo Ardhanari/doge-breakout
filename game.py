@@ -1,4 +1,5 @@
 import pygame, sys
+import math
 
 screen_width = 800
 screen_height = 600 
@@ -53,14 +54,23 @@ class Ball(pygame.sprite.Sprite):
 
         # Bouncing off the top wall
         if self.rect.y <= 0:
+            pygame.mixer.music.play()
             self.rect.y = 1
         # Boucing off the left wall
         if self.rect.x <= 0:
+            pygame.mixer.music.play()
             self.rect.x = 1
         # Boucing off the left wall
         if self.rect.x >= self.screenwidth - ball_width:
+            pygame.mixer.music.play()
             self.rect.x = self.screenwidth - ball_width - 1
+        # Bounce off player
+        # if pygame.sprite.spritecollide(ball, player, False):
+        #     pygame.mixer.music.play()
+            # do what now? 
+        # Ball touches bottom wall
         if self.rect.y > screen_height:
+            # pygame.mixer.music.play() play another sound?
             return True # will return true to game_over variable
 
 class Player(pygame.sprite.Sprite):
@@ -69,7 +79,7 @@ class Player(pygame.sprite.Sprite):
 
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = pygame.Surface((player_width, player_height))
+        self.image = pygame.Surface([player_width, player_height])
         self.image.fill((117, 255, 7))
         self.rect = self.image.get_rect()
 
@@ -114,13 +124,6 @@ pygame.display.set_caption('Doge breakout (wow)')
 
 # Define font
 font = pygame.font.Font(pygame.font.match_font('comicsansms'), 55) # I am SO sorry
-text = font.render("Much game, wow", 1, (10, 10, 10))
-textpos = text.get_rect()
-textpos.centerx = background.get_rect().centerx
-background.blit(text, textpos)
-
-# screen.blit(background, (0, 0))
-# pygame.display.flip()
 
 clock = pygame.time.Clock()
 
@@ -166,12 +169,47 @@ def main_game():
     # Main loop 
     while not exit_game:
 
+        if intro: 
+            text = font.render("Much game, wow", 1, (10, 10, 10))
+            textpos = text.get_rect()
+            textpos.centerx = background.get_rect().centerx
+            background.blit(text, textpos)
+            # text = font.render("You win!", True, BLACK)
+            # text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+            # screen.blit(text, text_rect)
+
+            screen.blit(background, (0, 0))
+            pygame.display.flip()
+            pygame.mixer.music.load('sounds/intro.mp3')
+            pygame.mixer.music.play()
+            pygame.mixer.music.fadeout(6000)
+            pygame.mixer.music.load('sounds/pop.mp3')
+            # to be moved to bounce function
+            # pygame.mixer.music.play()
+            
+            
+            intro = False
         # screen.fill((0,0,0))
 
         if not game_over or not game_won: 
 
             # player.move()
-            ball.move()        
+            ball.move()     
+
+            # check for ball colliding with walls 
+            # if pygame.sprite.collide_rect(ball, blocks):
+            bounced_blocks = pygame.sprite.spritecollide(ball, blocks, True)
+            if len(bounced_blocks) > 0: 
+                pygame.mixer.music.play()
+            print(bounced_blocks)
+            print(len(blocks))
+
+            if len(blocks) == 0:
+                game_won = True
+                print("Game won!")
+                print("Play again?")
+
+
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
@@ -197,23 +235,11 @@ def main_game():
             print("Game over!")
             print("Play again?")
 
-        if game_won:
-            print("Game won!")
-            print("Play again?")
-
         screen.blit(background, (0, 0))
         allsprites.draw(screen)
         clock.tick(30)
         pygame.display.flip()
 
-        if intro: 
-                pygame.mixer.music.load('sounds/intro.mp3')
-                pygame.mixer.music.play()
-                pygame.mixer.music.fadeout(6000)
-                pygame.mixer.music.load('sounds/pop.mp3')
-                # to be moved to bounce function
-                # pygame.mixer.music.play()
-                intro = False
 
 # if __name__ == '__main__': 
 #     main()
