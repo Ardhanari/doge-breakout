@@ -36,7 +36,6 @@ class Ball(pygame.sprite.Sprite):
         self.dir -= diff
     
     def move(self):
-        print(self.rect.x)
         dir_radians = math.radians(self.dir)
 
         self.rect.x += self.speed * math.sin(dir_radians)
@@ -180,9 +179,14 @@ def main_game():
             game_over = ball.move()
 
             # Bounce off player
-            if pygame.sprite.spritecollide(player, balls, False):
+            # if pygame.sprite.spritecollide(player, balls, False):
+            if pygame.sprite.collide_rect(player, ball):
                 pygame.mixer.music.play()
-                diff = (player.rect.x + PLAYER_WIDTH/2) - (ball.rect.x + ball.width - 1/2) # glitches, check math
+                diff = (player.rect.x + PLAYER_WIDTH/2) - (ball.rect.x + BALL_WIDTH/2) # glitches, check math
+                
+                # ball.horizontal_bounce(diff)
+                ball.rect.y = SCREEN_HEIGHT - PLAYER_HEIGHT - BALL_HEIGHT - 1
+                print(ball.rect.y)
                 print(diff)
                 ball.horizontal_bounce(diff)
 
@@ -217,6 +221,7 @@ def main_game():
             if game_over:
                 if sound: 
                     pygame.mixer.music.load('sounds/game_over.wav')
+                    pygame.mixer.music.set_volume(0.2)
                     pygame.mixer.music.play()
                     sound = False
                 ball.speed = 0
