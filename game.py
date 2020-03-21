@@ -74,11 +74,6 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.bottom = pygame.display.get_surface().get_height()
         self.rect.x = int(pygame.display.get_surface().get_height()/2)
-        # player can't move out of the screen
-        # if self.rect.x <= 0:
-        #     self.rect.x = 1
-        # if self.rect.x >= SCREEN_WIDTH - PLAYER_WIDTH:
-        #     self.rect.x = SCREEN_WIDTH - PLAYER_WIDTH - 1
 
 
 class Block(pygame.sprite.Sprite):
@@ -96,7 +91,6 @@ class Block(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-# Initialize pygame
 pygame.init()
 
 # Create an 800x600 sized screen
@@ -127,7 +121,6 @@ ball = Ball()
 balls.add(ball)
 allsprites.add(ball)
 
-# Block(self, x, y)
 def row_of_blocks(block_row):
     # POsition to start rendering blocks
     block_column = 0 # 26, 52, 78 etc.
@@ -199,19 +192,6 @@ def main_game():
 
             if len(blocks) == 0:
                 game_won = True
-            #     background = pygame.Surface(screen.get_size())
-            #     background = background.convert()
-            #     background.fill((55, 55, 148))
-            #     screen.blit(background, (0, 0))
-            #     pygame.mixer.music.load('sounds/game_won.wav') # needs to play ONCE
-            #     pygame.mixer.music.play()
-            #     pygame.mixer.music.stop()
-            #     text = font.render("You won, wow", 1, (10, 10, 10))
-            #     text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-            #     screen.blit(text, text_rect)
-            #     pygame.display.flip()
-            #     print("Game won!")
-            #     print("Play again?")
 
             if game_over:
                 if sound: 
@@ -229,17 +209,13 @@ def main_game():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         player.rect.x -= 20
-                        print("left")
                     if event.key == pygame.K_RIGHT:
                         player.rect.x += 20
-                        print("right")
                     # Quit game (Escape)
                     if event.key == pygame.K_ESCAPE:
-                            print("closed with esc")
                             exit()    
                 # Quit game (x)
                 if event.type == pygame.QUIT:
-                    print("closed with X")
                     exit()
 
         screen.blit(background, (0, 0))
@@ -250,8 +226,8 @@ def main_game():
     while game_won:
 
         if sound:
-            pygame.mixer.music.load('sounds/intro.mp3') # needs to play ONCE
-            pygame.mixer.music.play(-1) # actually, let's make it a loop 
+            pygame.mixer.music.load('sounds/intro.mp3')
+            pygame.mixer.music.play(-1)
             sound = False
         
         background_won = pygame.Surface(screen.get_size())
@@ -269,11 +245,9 @@ def main_game():
             # Quit game (Escape)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                        print("closed with esc")
                         exit()    
             # Quit game (x)
             if event.type == pygame.QUIT:
-                print("closed with X")
                 exit()
 
 main_game()
