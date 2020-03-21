@@ -159,12 +159,13 @@ for row in range(3):
 def main_game():
     
     game_over = False
-    game_won = False
+    game_won = True
     exit_game = False
     intro = True 
+    sound = True
     
     # Main loop 
-    while not exit_game:
+    while not game_won and not game_over:
 
         if intro: 
         #     text = font.render("Much game, wow", 1, (10, 10, 10))
@@ -182,7 +183,7 @@ def main_game():
             
             intro = False
 
-        if not game_over or not game_won: 
+        if not game_over and not game_won: 
 
             ball.move()
 
@@ -199,18 +200,21 @@ def main_game():
                 pygame.mixer.music.play()
                 ball.horizontal_bounce(0)
 
-            if len(blocks) == 0:
-                game_won = True
-                pygame.mixer.music.load('sounds/game_won.wav') # needs to play ONCE
-                pygame.mixer.music.play()
-                pygame.mixer.music.stop()
-                text = font.render("You won, wow", 1, (10, 10, 10))
-                text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-                screen.blit(text, text_rect)
-                screen.blit(background, (0, 0))
-                pygame.display.flip()
-                print("Game won!")
-                print("Play again?")
+            # if len(blocks) == 0:
+            #     game_won = True
+            #     background = pygame.Surface(screen.get_size())
+            #     background = background.convert()
+            #     background.fill((55, 55, 148))
+            #     screen.blit(background, (0, 0))
+            #     pygame.mixer.music.load('sounds/game_won.wav') # needs to play ONCE
+            #     pygame.mixer.music.play()
+            #     pygame.mixer.music.stop()
+            #     text = font.render("You won, wow", 1, (10, 10, 10))
+            #     text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+            #     screen.blit(text, text_rect)
+            #     pygame.display.flip()
+            #     print("Game won!")
+            #     print("Play again?")
 
             if game_over:
                 pygame.mixer.music.load('sounds/game_over.wav')
@@ -241,6 +245,22 @@ def main_game():
         screen.blit(background, (0, 0))
         allsprites.draw(screen)
         clock.tick(30) # 30 fps
+        pygame.display.flip()
+
+    while game_won:
+
+        pygame.mixer.music.load('sounds/intro.mp3') # needs to play ONCE
+        pygame.mixer.music.play(-1) # actually, let's make it a loop 
+        
+        background_won = pygame.Surface(screen.get_size())
+        background_won = background_won.convert()
+        background_won.fill((55, 55, 148))
+        
+        text = font.render("You won, wow", 1, (10, 10, 10))
+        text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+        
+        screen.blit(background_won, (0, 0))
+        screen.blit(text, text_rect)
         pygame.display.flip()
 
 main_game()
