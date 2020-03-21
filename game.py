@@ -162,7 +162,10 @@ def main_game():
             text = font.render("Much game, wow", 1, (10, 10, 10))
             textpos = text.get_rect()
             textpos.centerx = background.get_rect().centerx
+            info = pygame.image.load('images/info.png')
+            infopos = info.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
             background.blit(text, textpos)
+            background.blit(info, infopos)
             screen.blit(background, (0, 0))
             pygame.display.flip()
             pygame.mixer.music.load('sounds/intro.mp3')
@@ -172,7 +175,7 @@ def main_game():
             hide_title = pygame.Surface(screen.get_size())
             hide_title = background.convert()
             hide_title.fill((245, 216, 148))
-            background.blit(hide_title, (0,0))
+            background.blit(hide_title, (0, 0))
             intro = False
 
         if not game_won: 
