@@ -159,19 +159,20 @@ def main_game():
     while not game_won:
 
         if intro: 
-        #     text = font.render("Much game, wow", 1, (10, 10, 10))
-        #     textpos = text.get_rect()
-        #     textpos.centerx = background.get_rect().centerx
-        #     background.blit(text, textpos)
-        #     screen.blit(background, (0, 0))
-        #     pygame.display.flip()
-        #     pygame.mixer.music.load('sounds/intro.mp3')
-        #     pygame.mixer.music.play()
-        #     pygame.mixer.music.fadeout(6000)
+            text = font.render("Much game, wow", 1, (10, 10, 10))
+            textpos = text.get_rect()
+            textpos.centerx = background.get_rect().centerx
+            background.blit(text, textpos)
+            screen.blit(background, (0, 0))
+            pygame.display.flip()
+            pygame.mixer.music.load('sounds/intro.mp3')
+            pygame.mixer.music.play()
+            pygame.mixer.music.fadeout(6000)
             pygame.mixer.music.load('sounds/pop.mp3')
-        #     # to be moved to bounce function
-        #     # pygame.mixer.music.play()
-            
+            hide_title = pygame.Surface(screen.get_size())
+            hide_title = background.convert()
+            hide_title.fill((245, 216, 148))
+            background.blit(hide_title, (0,0))
             intro = False
 
         if not game_won: 
