@@ -77,18 +77,11 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.bottom = pygame.display.get_surface().get_height()
         self.rect.x = int(pygame.display.get_surface().get_height()/2)
-        # player cant move out of the screen
-        # # Boucing off the left wall
+        # player can't move out of the screen
         # if self.rect.x <= 0:
-        #     pygame.mixer.music.play()
-        #     print("bounced off left")
-        #     self.dir = (360 - self.dir) % 360
         #     self.rect.x = 1
-        # # Boucing off the right wall
-        # if self.rect.x >= self.screenwidth - BALL_WIDTH:
-        #     pygame.mixer.music.play()
-        #     self.dir = (360 - self.dir) % 360
-        #     self.rect.x = self.screenwidth - BALL_WIDTH - 1
+        # if self.rect.x >= SCREEN_WIDTH - PLAYER_WIDTH:
+        #     self.rect.x = SCREEN_WIDTH - PLAYER_WIDTH - 1
 
 
 class Block(pygame.sprite.Sprite):
@@ -198,6 +191,12 @@ def main_game():
             if len(bounced_blocks) > 0: 
                 pygame.mixer.music.play()
                 ball.horizontal_bounce(0)
+
+            # check if player touches the wall
+            if player.rect.x <= 0:
+                player.rect.x = 0
+            if player.rect.x >= SCREEN_WIDTH - PLAYER_WIDTH:
+                player.rect.x = SCREEN_WIDTH - PLAYER_WIDTH
 
             if len(blocks) == 0:
                 game_won = True
